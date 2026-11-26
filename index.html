@@ -14,7 +14,7 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <!--
   Иконка 7 (verbB2-teil7). Собрано сборщиком claude/muss-woerter-teil7/build.py — руками не править.
-  Занятые имена этой иконки: кэш kartei-teil7-v1 (префикс kartei-teil7-) · ключи localStorage teil7_box, teil7_ui, teil7_theme · цвет #86198F (фуксия).
+  Занятые имена этой иконки: кэш kartei-teil7-v2 (префикс kartei-teil7-) · ключи localStorage teil7_box, teil7_ui, teil7_theme · цвет #86198F (фуксия).
 -->
 <style>
 :root{
@@ -69,6 +69,7 @@ h2.tabh{font-size:17px;margin:4px 0 8px}
 .fl{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--faint);margin-right:2px}
 .chip{font:inherit;font-size:13px;font-weight:600;padding:5px 11px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--soft);cursor:pointer;white-space:nowrap}
 .chip.on{background:var(--acc);border-color:var(--acc);color:var(--on-acc)}
+#ctxru,#listru{white-space:normal;text-align:left}
 .chip small{font-weight:500;opacity:.8}
 .say{font:inherit;font-size:14px;line-height:1;padding:5px 6px;border-radius:8px;border:1px solid var(--line);background:var(--card);cursor:pointer;vertical-align:1px}
 .say:active{background:var(--acc-bg)}
@@ -88,6 +89,9 @@ h2.tabh{font-size:17px;margin:4px 0 8px}
 .ctx-hide .sx .ru{display:none}
 .ctx-hide .sx.show .ru{display:block}
 .ctx-hide .sx{cursor:pointer}
+.ctx-hide .cw .ru0, .ctx-hide .cw .note{visibility:hidden}
+.ctx-hide .cw.showw .ru0, .ctx-hide .cw.showw .note{visibility:visible}
+.ctx-hide .cw h3{cursor:pointer}
 /* статистика */
 .stats{display:flex;gap:6px;margin:0 0 10px}
 .stat{flex:1;text-align:center;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:5px 2px;font-size:11.5px;color:var(--soft)}
@@ -110,6 +114,9 @@ h2.tabh{font-size:17px;margin:4px 0 8px}
 .btn.ok{border-color:var(--ok);color:var(--ok)}
 .btn.no{border-color:var(--bad);color:var(--bad)}
 .btn.sm{flex:0 0 auto;font-size:12.5px;padding:7px 11px;font-weight:600}
+.fcount{font-size:14px;color:var(--soft);text-align:center;margin:0 0 6px;min-height:21px}
+.fcount b{color:var(--ink)}
+.btns .btn{min-width:0;padding-left:4px;padding-right:4px}
 .meta{font-size:12px;color:var(--faint);text-align:center;margin-top:8px}
 /* тест */
 .opts{display:flex;flex-direction:column;gap:7px;margin-top:14px}
@@ -136,6 +143,11 @@ input[type=search]{width:100%;font:inherit;font-size:15px;padding:8px 11px;borde
 .li .d.b1{background:var(--hi)} .li .d.b2{background:var(--ok)}
 .li .w{flex:1 1 48%;font-weight:600;font-size:14.5px}
 .li .r{flex:1 1 52%;font-size:14px;color:var(--soft)}
+.lst-hide .li .r{display:none}
+.lst-hide .li.show .r{display:block}
+.lst-hide .li{cursor:pointer}
+.lst-hide .li .w::after{content:" ›";color:var(--faint);font-weight:400}
+.lst-hide .li.show .w::after{content:""}
 .legend{font-size:12px;color:var(--faint);margin:0 0 8px}
 .legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin:0 3px 0 8px;vertical-align:0}
 footer{border-top:1px solid var(--line);margin-top:20px;padding-top:10px;font-size:12px;color:var(--faint)}
@@ -152,7 +164,7 @@ footer p{margin:0 0 6px}
 <div class="wrap">
 <header>
   <div class="hrow">
-    <h1>B2<span>·7</span> · Muss-Wörter <span class="ver">v1 · 26.11.2026</span></h1>
+    <h1>B2<span>·7</span> · Muss-Wörter <span class="ver">v2 · 27.11.2026</span></h1>
     <div class="theme js-only" id="theme" role="group" aria-label="Тема оформления">
       <button type="button" data-th="auto">Авто</button><button type="button" data-th="light">Светлая</button><button type="button" data-th="dark">Тёмная</button>
     </div>
@@ -170,8 +182,8 @@ footer p{margin:0 0 6px}
 
 <section class="tab on" id="ctx">
   <h2 class="tabh">Группа «!» — слова в предложениях</h2>
-  <div class="lead"><b>Группа «!»:</b> 84 слов, у каждого 3–4 предложения в стиле экзамена — объявление, письмо, сообщение на автоответчике, разговор. Читай вслух, 🔊 — послушать. <span class="js-only">Скрой переводы и проверь себя: нажми на предложение — появится перевод.</span> <span class="add">✎</span> — перевод дописал Claude (в твоём файле был «?»).</div>
-  <div class="row js-only"><button type="button" class="chip" id="ctxru">Переводы предложений: видны</button></div>
+  <div class="lead"><b>Группа «!»:</b> 84 слов, у каждого 3–4 предложения в стиле экзамена — объявление, письмо, сообщение на автоответчике, разговор. Читай вслух, 🔊 — послушать. <span class="js-only">Скрой переводы и проверь себя: нажми на слово или предложение — появится перевод.</span> <span class="add">✎</span> — перевод дописал Claude (в твоём файле был «?»).</div>
+  <div class="row js-only"><button type="button" class="chip" id="ctxru">Переводы: видны</button></div>
   <div id="ctxlist">
 <article class="cw" id="c1"><h3><span class="n">1</span>erledigt (erledigen) <span class="add" title="форма верная: erledigt — Partizip II от erledigen">✎</span> <button class="say" type="button" data-say="erledigt erledigen" aria-label="Прослушать">🔊</button></h3><div class="ru0">сделано, выполнено · erledigen — выполнять, улаживать</div><div class="note">✎ форма верная: erledigt — Partizip II от erledigen</div><div class="sx"><span class="tg t-Hören">Hören</span><span class="de">Frau Weber, die Bestellung für die Firma Krause ist <b>erledigt</b>, die Ware geht morgen früh raus.</span> <button class="say" type="button" data-say="Frau Weber, die Bestellung für die Firma Krause ist erledigt, die Ware geht morgen früh raus." aria-label="Прослушать">🔊</button><div class="ru">Фрау Вебер, заказ для фирмы Краузе выполнен, товар уйдёт завтра утром.</div></div><div class="sx"><span class="tg t-Schreiben">Schreiben</span><span class="de">Bitte <b>erledigen</b> Sie die Reklamation bis Freitag und informieren Sie den Kunden.</span> <button class="say" type="button" data-say="Bitte erledigen Sie die Reklamation bis Freitag und informieren Sie den Kunden." aria-label="Прослушать">🔊</button><div class="ru">Пожалуйста, уладьте рекламацию до пятницы и сообщите клиенту.</div></div><div class="sx"><span class="tg t-Lesen">Lesen</span><span class="de">Aufgaben, die vor dem Urlaub nicht <b>erledigt</b> wurden, übergeben Sie bitte an Ihre Vertretung.</span> <button class="say" type="button" data-say="Aufgaben, die vor dem Urlaub nicht erledigt wurden, übergeben Sie bitte an Ihre Vertretung." aria-label="Прослушать">🔊</button><div class="ru">Задачи, которые не были выполнены до отпуска, передайте, пожалуйста, тому, кто вас замещает.</div></div><div class="sx"><span class="tg t-Sprechen">Sprechen</span><span class="de">Die Präsentation ist schon <b>erledigt</b>, jetzt kann ich bei der Inventur helfen.</span> <button class="say" type="button" data-say="Die Präsentation ist schon erledigt, jetzt kann ich bei der Inventur helfen." aria-label="Прослушать">🔊</button><div class="ru">Презентация уже готова, теперь я могу помочь с инвентаризацией.</div></div></article>
 <article class="cw" id="c2"><h3><span class="n">2</span>der/die Vorgesetzte, -n <button class="say" type="button" data-say="der, die Vorgesetzte" aria-label="Прослушать">🔊</button></h3><div class="ru0">начальник / начальница · Gespräche mit Vorgesetzten — разговоры с руководством</div><div class="sx"><span class="tg t-Lesen">Lesen</span><span class="de">Urlaubsanträge müssen spätestens vier Wochen vorher bei der direkten <b>Vorgesetzten</b> eingereicht werden.</span> <button class="say" type="button" data-say="Urlaubsanträge müssen spätestens vier Wochen vorher bei der direkten Vorgesetzten eingereicht werden." aria-label="Прослушать">🔊</button><div class="ru">Заявления на отпуск нужно подать непосредственной начальнице не позднее чем за четыре недели.</div></div><div class="sx"><span class="tg t-Hören">Hören</span><span class="de">Bei Krankheit informieren Sie bitte am ersten Tag bis 9 Uhr Ihren <b>Vorgesetzten</b>.</span> <button class="say" type="button" data-say="Bei Krankheit informieren Sie bitte am ersten Tag bis 9 Uhr Ihren Vorgesetzten." aria-label="Прослушать">🔊</button><div class="ru">При болезни сообщите, пожалуйста, своему начальнику в первый же день до 9 часов.</div></div><div class="sx"><span class="tg t-Sprechen">Sprechen</span><span class="de">Ich würde zuerst mit meinem <b>Vorgesetzten</b> sprechen, bevor ich zum Betriebsrat gehe.</span> <button class="say" type="button" data-say="Ich würde zuerst mit meinem Vorgesetzten sprechen, bevor ich zum Betriebsrat gehe." aria-label="Прослушать">🔊</button><div class="ru">Я бы сначала поговорил со своим начальником, прежде чем идти в совет предприятия.</div></div><div class="sx"><span class="tg t-Lesen">Lesen</span><span class="de">Gespräche mit <b>Vorgesetzten</b> sollte man gut vorbereiten: Notieren Sie Ihre Argumente vorher.</span> <button class="say" type="button" data-say="Gespräche mit Vorgesetzten sollte man gut vorbereiten: Notieren Sie Ihre Argumente vorher." aria-label="Прослушать">🔊</button><div class="ru">К разговорам с руководством нужно хорошо готовиться: запишите свои аргументы заранее.</div></div></article>
@@ -265,6 +277,7 @@ footer p{margin:0 0 6px}
   <div class="row"><span class="fl">Группы</span><button type="button" class="chip" data-set="A">! <small>84</small></button><button type="button" class="chip" data-set="B">1 <small>94</small></button><button type="button" class="chip" data-set="C">2 <small>118</small></button></div>
   <div class="row"><span class="fl">Сторона</span><button type="button" class="chip" data-dir="de">немецкий → перевод</button><button type="button" class="chip" data-dir="ru">перевод → немецкий</button></div>
   <div class="stats"><div class="stat"><b data-s="0">0</b>новые</div><div class="stat"><b data-s="1">0</b>учу</div><div class="stat"><b data-s="2">0</b>знаю</div></div>
+  <div class="fcount" id="fcount"></div>
   <div class="fcard" id="fcard" role="button" tabindex="0"></div>
   <div class="btns" id="fbtns"></div>
   <div class="meta" id="fmeta"></div>
@@ -291,6 +304,7 @@ footer p{margin:0 0 6px}
 
 <section class="tab" id="list">
   <h2 class="tabh">Все слова</h2>
+  <div class="row js-only"><button type="button" class="chip" id="listru">Переводы: скрыты</button></div>
   <input type="search" id="q" class="js-only" placeholder="Поиск: Auftrag, заказ…" aria-label="Поиск" autocomplete="off">
   <p class="legend js-only">Точка — прогресс из карточек и теста:<i style="background:var(--line)"></i>новое<i style="background:var(--hi)"></i>учу<i style="background:var(--ok)"></i>знаю</p>
 <h3 class="grph">Группа «!» — с примерами · 84</h3>
@@ -597,7 +611,7 @@ footer p{margin:0 0 6px}
 <p class="lead nojs">Без JavaScript работают только «Примеры» и «Список» — карточки, тест и пары появятся, когда JavaScript включён.</p>
 
 <footer>
-  <p><b>Как учить:</b> сначала группа «!» — прочитать примеры, потом карточки и тест в режиме «пропуск в предложении». Группы «1» и «2» — карточки (кликнул → перевернул → «знал» или «ещё раз») и тест. Слово, которое ты не знал, вернётся через три карточки. Два правильных ответа — и слово уходит в «знаю».</p>
+  <p><b>Как учить:</b> сначала группа «!» — прочитать примеры, потом карточки и тест в режиме «пропуск в предложении». Группы «1» и «2» — карточки и тест. Карточки идут кругами по 20: «Не знаю» — слово вернётся через 8–10 карточек (в одном круге максимум два раза), «Потом» — в конец круга, «Знаю» — слово уходит. Если в круге ни разу не нажал «Не знаю» — слово попадает в «знаю» и больше не показывается; если ошибся — остаётся в «учу» и стоит первым в следующем круге.</p>
   <p>Предложения написаны в стиле экзамена Deutsch-Test für den Beruf B2 (это не задания из реального экзамена). Немецкий ещё не прошёл корректора.</p>
   <p>Иконка 7 · verbB2-teil7 · 296 слов.</p>
 </footer>
@@ -675,11 +689,15 @@ var DATA = {"groups":[{"k":"A","name":"!"},{"k":"B","name":"1"},{"k":"C","name":
     each(document.querySelectorAll('[data-s]'), function(el){ el.textContent=c[+el.dataset.s]; });
   }
 
-  /* ---------- карточки ---------- */
-  var fq=[], fcur=null, fshown=false, fok=0, fdone=0;
+  /* ---------- карточки: круги по 20 · «Не знаю» вернётся через 8–10 карточек · «Потом» — в конец круга ---------- */
+  var ROUND=20, fq=[], fcur=null, fshown=false, rsize=0, rdone=0, rwrong={}, rtries={}, rlater=0;
+  function nwrong(){ return Object.keys(rwrong).length; }
   function startCards(){
-    fq=shuffle(pool().filter(function(w){ return UI.showKnown || box(w.i)<2; }));
-    fok=0; fdone=0; stats(); fnext();
+    var p=pool().filter(function(w){ return UI.showKnown || box(w.i)<2; });
+    if(!Array.isArray(UI.carry)) UI.carry=[];
+    var carry=UI.carry.map(function(id){ return BYID[id]; }).filter(function(w){ return w && p.indexOf(w)>=0; });
+    fq=carry.concat(shuffle(p.filter(function(w){ return carry.indexOf(w)<0; }))).slice(0,ROUND);
+    rsize=fq.length; rdone=0; rwrong={}; rtries={}; rlater=0; stats(); fnext();
     each(document.querySelectorAll('[data-known]'), function(b){ b.textContent='показывать «знаю»: '+(UI.showKnown?'да':'нет'); });
   }
   function fnext(){ fcur=fq.shift()||null; fshown=false; fdraw(); }
@@ -688,33 +706,45 @@ var DATA = {"groups":[{"k":"A","name":"!"},{"k":"B","name":"1"},{"k":"C","name":
     var s=w.s[Math.floor(Math.random()*w.s.length)];
     return '<div class="ex">'+bold(s.de)+' <button class="say" type="button" data-say="'+esc(plain(s.de))+'">🔊</button><i>'+esc(s.ru)+'</i></div>';
   }
+  function carryAdd(id){ if(UI.carry.indexOf(id)<0){ UI.carry.push(id); saveUI(); } }
+  function carryDel(id){ var i=UI.carry.indexOf(id); if(i>=0){ UI.carry.splice(i,1); saveUI(); } }
   function fdraw(){
     var c=$('fcard'), b=$('fbtns');
+    $('fcount').innerHTML = rsize ? ('круг: <b>'+Math.min(rdone+(fcur?1:0),rsize)+'/'+rsize+'</b> · не знаю: <b>'+nwrong()+'</b>'+(rlater?' · отложено: '+rlater:'')) : '';
     if(!fcur){
       c.classList.add('done');
-      c.innerHTML='<div class="flab">Готово</div><div class="fq ru">Круг пройден</div><div class="fh">'+(fdone?('знал сразу: '+fok+' из '+fdone):'В выбранных группах нет новых карточек — включи ещё группу или «показывать «знаю»».')+'</div>';
-      b.innerHTML='<button type="button" class="btn pri" data-f="again">Ещё круг</button>'; $('fmeta').textContent=''; return;
+      if(!rsize){ c.innerHTML='<div class="flab">Пусто</div><div class="fq ru">Нет карточек</div><div class="fh">В выбранных группах всё уже в «знаю» — включи ещё группу или «показывать «знаю»».</div>'; b.innerHTML=''; $('fmeta').textContent=''; return; }
+      var nw=nwrong();
+      c.innerHTML='<div class="flab">Круг пройден</div><div class="fq ru">знаю '+(rsize-nw)+' · не знаю '+nw+'</div><div class="fh">'+(nw?'Невыученные ('+nw+') пойдут первыми в следующем круге.':'Отлично — весь круг без ошибок.')+'</div>';
+      b.innerHTML='<button type="button" class="btn pri" data-f="again">Следующий круг</button>'; $('fmeta').textContent=''; return;
     }
     c.classList.toggle('done', fshown);
     var w=fcur, de=UI.dir==='de';
-    var h='<div class="flab">'+(de?'Вспомни перевод':'Вспомни немецкое слово')+' · группа «'+esc(DATA.gname[w.g])+'»</div>'+
+    var h='<div class="flab">'+(de?'Вспомни перевод':'Вспомни немецкое слово')+' · группа «'+esc(DATA.gname[w.g])+'»'+(rwrong[w.i]?' · ещё раз':'')+'</div>'+
       '<div class="fq'+(de?'':' ru')+'">'+esc(de?w.de:w.ru)+'</div>';
     if(!fshown) h+='<div class="fh">нажми на карточку, чтобы перевернуть</div>';
     else h+='<div class="fans"><div class="big">'+esc(de?w.ru:w.de)+' <button class="say" type="button" data-say="'+esc(w.say)+'">🔊</button></div>'+exHtml(w)+'</div>';
     c.innerHTML=h;
-    b.innerHTML = fshown ? '<button type="button" class="btn no" data-f="no">↻ Ещё раз</button><button type="button" class="btn ok" data-f="yes">✓ Знал</button>' : '<button type="button" class="btn pri" data-f="show">Перевернуть</button>';
-    $('fmeta').textContent='осталось в круге: '+fq.length;
+    b.innerHTML = fshown ? '<button type="button" class="btn no" data-f="no">✗ Не знаю</button><button type="button" class="btn" data-f="later">⏭ Потом</button><button type="button" class="btn ok" data-f="yes">✓ Знаю</button>'
+                         : '<button type="button" class="btn" data-f="later">⏭ Потом</button><button type="button" class="btn pri" data-f="show">Перевернуть</button>';
+    $('fmeta').textContent='в очереди круга: '+(fq.length+1);
   }
   function fflip(){ if(fcur && !fshown){ fshown=true; fdraw(); if(UI.dir==='ru') speak(fcur.say); } }
+  function fact(a){
+    if(a==='show') return fflip();
+    if(a==='again') return startCards();
+    if(!fcur) return;
+    var w=fcur;
+    if(a==='yes'){ setBox(w.i, rwrong[w.i] ? 1 : 2); if(!rwrong[w.i]) carryDel(w.i); rdone++; }
+    else if(a==='no'){ rwrong[w.i]=1; setBox(w.i,1); carryAdd(w.i); rtries[w.i]=(rtries[w.i]|0)+1;
+      if(rtries[w.i]<=2){ var pos=8+Math.floor(Math.random()*3); fq.splice(Math.min(pos,fq.length),0,w); } else rdone++; }
+    else if(a==='later'){ fq.push(w); rlater++; }
+    stats(); fnext();
+  }
   $('fcard').addEventListener('click', function(e){ if(e.target.closest('.say')) return; fflip(); });
   $('fcard').addEventListener('keydown', function(e){ if(e.key===' '||e.key==='Enter'){ e.preventDefault(); fflip(); } });
-  $('fbtns').addEventListener('click', function(e){
-    var b=e.target.closest('[data-f]'); if(!b) return; var a=b.dataset.f;
-    if(a==='show') fflip();
-    else if(a==='yes'){ setBox(fcur.i, Math.min(2, box(fcur.i)+1)); fok++; fdone++; stats(); fnext(); }
-    else if(a==='no'){ setBox(fcur.i, 1); fdone++; fq.splice(Math.min(3,fq.length),0,fcur); stats(); fnext(); }
-    else if(a==='again') startCards();
-  });
+  document.addEventListener('keydown', function(e){ if(UI.tab!=='cards' || !fshown) return; if(e.key==='1') fact('no'); else if(e.key==='2') fact('later'); else if(e.key==='3') fact('yes'); });
+  $('fbtns').addEventListener('click', function(e){ var b=e.target.closest('[data-f]'); if(b) fact(b.dataset.f); });
   each(document.querySelectorAll('[data-known]'), function(b){ b.addEventListener('click', function(){ UI.showKnown=!UI.showKnown; saveUI(); startCards(); }); });
   each(document.querySelectorAll('[data-reset]'), function(b){ b.addEventListener('click', function(){
     if(!b.dataset.armed){ b.dataset.armed='1'; b.textContent='точно сбросить?'; setTimeout(function(){ delete b.dataset.armed; b.textContent='сбросить прогресс'; },4000); return; }
@@ -806,11 +836,15 @@ var DATA = {"groups":[{"k":"A","name":"!"},{"k":"B","name":"1"},{"k":"C","name":
   $('pbtns').addEventListener('click', function(e){ if(e.target.closest('[data-pp]')) startPairs(); });
 
   /* ---------- примеры: скрыть переводы ---------- */
-  function paintCtx(){ $('ctxlist').classList.toggle('ctx-hide', UI.ctxHide); $('ctxru').textContent='Переводы предложений: '+(UI.ctxHide?'скрыты (нажми на предложение)':'видны'); $('ctxru').classList.toggle('on', UI.ctxHide); }
-  $('ctxru').addEventListener('click', function(){ UI.ctxHide=!UI.ctxHide; saveUI(); each(document.querySelectorAll('.sx.show'), function(s){ s.classList.remove('show'); }); paintCtx(); });
-  $('ctxlist').addEventListener('click', function(e){ if(!UI.ctxHide || e.target.closest('.say')) return; var s=e.target.closest('.sx'); if(s) s.classList.toggle('show'); });
+  function paintCtx(){ $('ctxlist').classList.toggle('ctx-hide', UI.ctxHide); $('ctxru').textContent='Переводы: '+(UI.ctxHide?'скрыты (нажми, чтобы увидеть)':'видны'); $('ctxru').classList.toggle('on', UI.ctxHide); }
+  $('ctxru').addEventListener('click', function(){ UI.ctxHide=!UI.ctxHide; saveUI(); each(document.querySelectorAll('.sx.show, .cw.showw'), function(s){ s.classList.remove('show'); s.classList.remove('showw'); }); paintCtx(); });
+  $('ctxlist').addEventListener('click', function(e){ if(!UI.ctxHide || e.target.closest('.say')) return; var s=e.target.closest('.sx'); if(s){ s.classList.toggle('show'); return; } var hh=e.target.closest('.cw h3, .cw .ru0'); if(hh) hh.closest('.cw').classList.toggle('showw'); });
 
   /* ---------- список ---------- */
+  if(typeof UI.listHide!=='boolean') UI.listHide=true;
+  function paintList(){ $('list').classList.toggle('lst-hide', UI.listHide); $('listru').textContent='Переводы: '+(UI.listHide?'скрыты (нажми, чтобы увидеть)':'видны'); $('listru').classList.toggle('on', UI.listHide); }
+  $('listru').addEventListener('click', function(){ UI.listHide=!UI.listHide; saveUI(); each(document.querySelectorAll('.li.show'), function(li){ li.classList.remove('show'); }); paintList(); });
+  $('list').addEventListener('click', function(e){ if(!UI.listHide) return; var li=e.target.closest('.li[data-i]'); if(li) li.classList.toggle('show'); });
   function paintDots(){ each(document.querySelectorAll('.li[data-i]'), function(li){ var d=li.querySelector('.d'); var b=box(li.dataset.i); d.className='d'+(b?' b'+b:''); }); }
   var LQ={}; each(document.querySelectorAll('.li[data-i]'), function(li){ LQ[li.dataset.i]=li.textContent.toLowerCase(); });
   $('q').addEventListener('input', function(){ var q=this.value.trim().toLowerCase();
@@ -824,7 +858,7 @@ var DATA = {"groups":[{"k":"A","name":"!"},{"k":"B","name":"1"},{"k":"C","name":
   if(TTS){ root.classList.add('tts'); pickVoice(); if('onvoiceschanged' in speechSynthesis) speechSynthesis.onvoiceschanged=pickVoice; }
 
   /* ---------- старт ---------- */
-  paintSets(); paintCtx(); paintDots();
+  paintSets(); paintCtx(); paintDots(); paintList();
   var h=(location.hash||'').replace('#','');
   showTab(TABS.indexOf(h)>=0 ? h : (UI.tab||'ctx'));
   if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){
