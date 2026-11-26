@@ -1,0 +1,26 @@
+{
+  "name": "B2·7 · Muss-Wörter",
+  "short_name": "B2·7",
+  "description": "Самые нужные слова: примеры в стиле экзамена B2 Beruf, карточки, тест, пары",
+  "lang": "ru",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FAF7FA",
+  "theme_color": "#86198F",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
