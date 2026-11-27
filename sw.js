@@ -1,5 +1,5 @@
 /* verbB2-teil7 · сеть в первую очередь, кэш — когда нет интернета. Удаляет только свои старые кэши (префикс kartei-teil7-). */
-var CACHE = 'kartei-teil7-v2';
+var CACHE = 'kartei-teil7-v3';
 var FILES = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 self.addEventListener('install', function(e){ e.waitUntil(caches.open(CACHE).then(function(c){ return c.addAll(FILES); }).then(function(){ return self.skipWaiting(); })); });
 self.addEventListener('activate', function(e){ e.waitUntil(caches.keys().then(function(ks){ return Promise.all(ks.filter(function(k){ return k.indexOf('kartei-teil7-') === 0 && k !== CACHE; }).map(function(k){ return caches.delete(k); })); }).then(function(){ return self.clients.claim(); })); });
